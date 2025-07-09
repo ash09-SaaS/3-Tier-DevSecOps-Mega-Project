@@ -86,7 +86,35 @@ pipeline {
             }
              
         }  
+        stage('K8s-deploy') {
+            steps {
+                script{
+                    withKubeConfig(caCertificate: '', clusterName: 'devopsshack-cluster', contextName: '', credentialsId: 'k8-token', namespace: 'dev', restrictKubeConfigAccess: false, serverUrl: 'https://24832DDC1F2EC237C1FE1E1BCC95C853.gr7.ap-south-1.eks.amazonaws.com') {
+                        
+
+                        sh 'kubectl apply -f k8s/sc.yaml -n dev'
+                        sh 'kubectl apply -f k8s/mysql.yaml -n dev'
+                        sh 'kubectl apply -f k8s/backend.yaml -n dev'
+                        sh 'kubectl apply -f k8s/frontend.yaml -n dev'
+                        sleep 30
+        }
+       }
+      }
+    }
+            stage('K8s-deploy') {
+            steps {
+                script{
+                    withKubeConfig(caCertificate: '', clusterName: 'devopsshack-cluster', contextName: '', credentialsId: 'k8-token', namespace: 'dev', restrictKubeConfigAccess: false, serverUrl: 'https://24832DDC1F2EC237C1FE1E1BCC95C853.gr7.ap-south-1.eks.amazonaws.com') {
+                        
+
+                        sh 'kubectl get pods -n dev'
+                        sh 'kubectl get svc -n dev'
+                        
+        }
+      }
+                
+     }
+    }
         
-            
     }
 }
